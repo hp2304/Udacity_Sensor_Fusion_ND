@@ -1,0 +1,10 @@
+.*
+build/
+cmake-build-debug/
+
+dat/
+image*/
+solution*/
+
+!/.gitignore
+
