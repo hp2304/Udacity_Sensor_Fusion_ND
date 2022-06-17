@@ -95,7 +95,6 @@ int main(int argc, const char *argv[])
         dataBuffer.push_back(frame);
 
 //        cout << "#1 : LOAD IMAGE INTO BUFFER done" << endl;
-        cout << imgIndex;
 
 
         /* DETECT & CLASSIFY OBJECTS */
@@ -131,7 +130,7 @@ int main(int argc, const char *argv[])
         clusterLidarWithROI((dataBuffer.end()-1)->boundingBoxes, (dataBuffer.end() - 1)->lidarPoints, shrinkFactor, P_rect_00, R_rect_00, RT);
 
         // Visualize 3D objects
-        bVis = false;
+        bVis = true;
         if(bVis){
             cv::Mat visImg;
             show3DObjects((dataBuffer.end()-1)->boundingBoxes, cv::Size(4.0, 20.0), cv::Size(800, 800), visImg);
@@ -273,7 +272,8 @@ int main(int argc, const char *argv[])
                     computeTTCCamera((dataBuffer.end() - 2)->keypoints, (dataBuffer.end() - 1)->keypoints, currBB->kptMatches, sensorFrameRate, ttcCamera);
 
                     cv::Mat ttc_cam_vis = imgGray.clone();
-                    if(false){
+                    bVis = true;
+                    if(bVis){
                         for(auto const &m: currBB->kptMatches){
                             assert(m.queryIdx < (dataBuffer.end() - 1)->keypoints.size());
                             assert(m.trainIdx < (dataBuffer.end() - 2)->keypoints.size());
@@ -286,13 +286,13 @@ int main(int argc, const char *argv[])
 //                        displayImg(ttc_cam_vis, "Matching keypoints between two camera images (best 50)");
                         cv::imwrite("../results/camera_match/" +  res_fp, ttc_cam_vis);
                     }
+                    bVis = false;
 
-                    cout << " " << ttcCamera;
 //                    printf("_%lf_%lf", ttcLidar, ttcCamera);
 
                     //// EOF STUDENT ASSIGNMENT
 
-                    bVis = false;
+                    bVis = true;
                     if (bVis)
                     {
                         cv::Mat visImg = (dataBuffer.end() - 1)->cameraImg.clone();
@@ -313,7 +313,6 @@ int main(int argc, const char *argv[])
             } // eof loop over all BB matches            
 
         }
-        cout << " ";
 
     } // eof loop over all images
 

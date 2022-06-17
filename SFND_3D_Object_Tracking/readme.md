@@ -158,7 +158,7 @@ void clusterKptMatchesWithROI(BoundingBox &boundingBox, std::vector<cv::KeyPoint
 //
 //    // Keep only one
 //
-//    // potentialMatches = filterSigma(potentialMatches, kptsPrev, kptsCurr);
+//    // potentialMatches = filterSigma(potentialMatches, kptsPrev, kptsCurr, 1);
 //    potentialMatches = filterInterQuantile(potentialMatches, kptsPrev, kptsCurr);
 //
 //    boundingBox.kptMatches = potentialMatches;

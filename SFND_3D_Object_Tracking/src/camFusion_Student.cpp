@@ -141,10 +141,10 @@ double calculateStdDev(vector<double> const &dists, double const &mean){
     for(auto const &dist: dists)
         sigma += pow(dist - mean, 2);
 
-    return sqrt(sigma / dists.size());
+    return sqrt(sigma / (dists.size() - 1));
 }
 
-vector<cv::DMatch> filterSigma(vector<cv::DMatch> &matches, vector<cv::KeyPoint> &kptsPrev, vector<cv::KeyPoint> &kptsCurr){
+vector<cv::DMatch> filterSigma(vector<cv::DMatch> const &matches, vector<cv::KeyPoint> const &kptsPrev, vector<cv::KeyPoint> const &kptsCurr, int nb_sigma = 3){
     vector<double> dists;
     vector<cv::DMatch> filtered_matches;
 
@@ -153,14 +153,13 @@ vector<cv::DMatch> filterSigma(vector<cv::DMatch> &matches, vector<cv::KeyPoint>
         auto const cur_kp = kptsCurr[match.queryIdx];
         auto const prev_kp = kptsPrev[match.trainIdx];
 
-        double dist = sqrt(pow(cur_kp.pt.x - prev_kp.pt.x, 2) + pow(cur_kp.pt.y - prev_kp.pt.y, 2));
+        const double dist = cv::norm(cur_kp.pt - prev_kp.pt);
         mean_dist += dist;
         dists.push_back(dist);
     }
     mean_dist /= dists.size();
 
     double sigma = calculateStdDev(dists, mean_dist);
-    int nb_sigma = 1;
     double min_val = mean_dist - (nb_sigma * sigma), max_val = mean_dist + (nb_sigma * sigma);
 
     for(int i=0; i<dists.size(); ++i){
@@ -170,7 +169,7 @@ vector<cv::DMatch> filterSigma(vector<cv::DMatch> &matches, vector<cv::KeyPoint>
     return filtered_matches;
 }
 
-vector<cv::DMatch> filterInterQuantile(vector<cv::DMatch> &matches, vector<cv::KeyPoint> &kptsPrev, vector<cv::KeyPoint> &kptsCurr){
+vector<cv::DMatch> filterInterQuantile(vector<cv::DMatch> const &matches, vector<cv::KeyPoint> const &kptsPrev, vector<cv::KeyPoint> const &kptsCurr){
     vector<double> dists;
     vector<cv::DMatch> filtered_matches;
 
@@ -178,7 +177,7 @@ vector<cv::DMatch> filterInterQuantile(vector<cv::DMatch> &matches, vector<cv::K
         auto const cur_kp = kptsCurr[match.queryIdx];
         auto const prev_kp = kptsPrev[match.trainIdx];
 
-        double dist = sqrt(pow(cur_kp.pt.x - prev_kp.pt.x, 2) + pow(cur_kp.pt.y - prev_kp.pt.y, 2));
+        const double dist = cv::norm(cur_kp.pt - prev_kp.pt);
         dists.push_back(dist);
     }
     nth_element(dists.begin(), dists.begin() + (dists.size() / 4), dists.end());
@@ -190,7 +189,7 @@ vector<cv::DMatch> filterInterQuantile(vector<cv::DMatch> &matches, vector<cv::K
         auto const cur_kp = kptsCurr[match.queryIdx];
         auto const prev_kp = kptsPrev[match.trainIdx];
 
-        double dist = sqrt(pow(cur_kp.pt.x - prev_kp.pt.x, 2) + pow(cur_kp.pt.y - prev_kp.pt.y, 2));
+        const double dist = cv::norm(cur_kp.pt - prev_kp.pt);
         if(dist >= min_val && dist <= max_val)
             filtered_matches.push_back(match);
     }
@@ -213,7 +212,7 @@ void clusterKptMatchesWithROI(BoundingBox &boundingBox, std::vector<cv::KeyPoint
 //
 //    // Keep only one
 //
-//    // potentialMatches = filterSigma(potentialMatches, kptsPrev, kptsCurr);
+//    // potentialMatches = filterSigma(potentialMatches, kptsPrev, kptsCurr, 1);
 //    potentialMatches = filterInterQuantile(potentialMatches, kptsPrev, kptsCurr);
 //
 //    boundingBox.kptMatches = potentialMatches;
@@ -287,8 +286,10 @@ void computeTTCCamera(std::vector<cv::KeyPoint> &kptsPrev, std::vector<cv::KeyPo
 double findRobustClosestPoint(std::vector<LidarPoint> &lidarPoints, float percentile){
     assert(percentile >= 0 && percentile < 100);
     std::vector<double> x_vals;
-    for(auto const &lidarPoint: lidarPoints)
+    x_vals.reserve(lidarPoints.size());
+    for (const auto &lidarPoint : lidarPoints) {
         x_vals.push_back(lidarPoint.x);
+    }
 
     int pos = (int) (lidarPoints.size() * (percentile / 100));
     std::nth_element(x_vals.begin(), x_vals.begin() + pos, x_vals.end());
