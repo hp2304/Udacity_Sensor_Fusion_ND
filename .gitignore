@@ -3,8 +3,10 @@ build/
 cmake-build-debug/
 
 dat/
+data/
 image*/
 solution*/
+Eigen/
 
 !/.gitignore
 
