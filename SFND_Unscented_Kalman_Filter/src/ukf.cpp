@@ -143,10 +143,10 @@ void UKF::Prediction(double delta_t) {
      */
 
     // create augmented mean vector
-    VectorXd x_aug = VectorXd(n_aug_);
+    VectorXd x_aug = VectorXd::Zero(n_aug_);
 
     // create augmented state covariance
-    MatrixXd P_aug = MatrixXd(n_aug_, n_aug_);
+    MatrixXd P_aug = MatrixXd::Zero(n_aug_, n_aug_);
 
     // create sigma point matrix
     MatrixXd Xsig_aug = MatrixXd(n_aug_, 2 * n_aug_ + 1);
@@ -217,12 +217,10 @@ void UKF::Prediction(double delta_t) {
      * 2. Update x and P
      */
     // create vector for predicted state
-    VectorXd x_pred = VectorXd(n_x_);
-    x_pred.setZero();
+    VectorXd x_pred = VectorXd::Zero(n_x_);
 
     // create covariance matrix for prediction
-    MatrixXd P_pred = MatrixXd(n_x_, n_x_);
-    P_pred.setZero();
+    MatrixXd P_pred = MatrixXd::Zero(n_x_, n_x_);
 
     // predict state mean
     for(int i=0; i<(2*n_aug_+1); ++i){
@@ -286,12 +284,10 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   MatrixXd Zsig = MatrixXd(n_z, 2 * n_aug_ + 1);
 
   // mean predicted measurement
-  VectorXd z_pred = VectorXd(n_z);
-  z_pred.setZero();
+  VectorXd z_pred = VectorXd::Zero(n_z);
 
   // measurement covariance matrix S
-  MatrixXd S = MatrixXd(n_z, n_z);
-  S.setZero();
+  MatrixXd S = MatrixXd::Zero(n_z, n_z);
 
   // transform sigma points into measurement space
   for(int i=0; i<(2 * n_aug_ + 1); ++i){
@@ -326,8 +322,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
    */
 
   // create matrix for cross correlation Tc
-  MatrixXd Tc = MatrixXd(n_x_, n_z);
-  Tc.setZero();
+  MatrixXd Tc = MatrixXd::Zero(n_x_, n_z);
 
   // calculate cross correlation matrix
     for(int i=0; i<(2*n_aug_ + 1); ++i){
