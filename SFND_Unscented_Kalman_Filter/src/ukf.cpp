@@ -24,7 +24,7 @@ UKF::UKF() {
   std_a_ = 6;
 
   // Process noise standard deviation yaw acceleration in rad/s^2
-  std_yawdd_ = 0.5;
+  std_yawdd_ = 1;
   
   /**
    * DO NOT MODIFY measurement noise values below.
@@ -90,7 +90,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
     if(use_laser_ && meas_package.sensor_type_ == meas_package.LASER) {
         x_ << meas_package.raw_measurements_[0],
                 meas_package.raw_measurements_[1],
-                1, 0, 0;
+                0, 0, 0;
         P_ <<   pow(std_laspx_, 2), 0, 0, 0, 0,
                 0, pow(std_laspy_, 2), 0, 0, 0,
                 0, 0, 1, 0, 0,
@@ -102,7 +102,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
         double phi = meas_package.raw_measurements_[1];
         x_ <<   rho * cos(phi),
                 rho * sin(phi),
-                1, 0, 0;
+                0, 0, 0;
         P_ = MatrixXd::Identity(n_x_, n_x_);
         P_(0, 0) = 0.4;
         P_(1, 1) = 0.4;
