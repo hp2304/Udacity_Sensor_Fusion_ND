@@ -262,6 +262,8 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
   MatrixXd I = MatrixXd::Identity(n_x_, n_x_);
   P_ = (I - K * H_) * P_; // 5x5 5x5 = 5x5
 
+  VectorXd nis = y.transpose() * Si * y;
+  std::cout << "NIS LIDAR: " << nis(0, 0) << std::endl;
 }
 
 void UKF::UpdateRadar(MeasurementPackage meas_package) {
@@ -330,11 +332,16 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
     }
 
     // calculate Kalman gain K;
-    MatrixXd K = Tc * S.inverse();
+    MatrixXd Si = S.inverse();
+    MatrixXd K = Tc * Si;
 
     VectorXd z = meas_package.raw_measurements_;
+    VectorXd y = z - z_pred;
 
     // update state mean and covariance matrix
-    x_ += K * (z - z_pred);
+    x_ += K * y;
     P_ -= K * S * K.transpose();
+
+    VectorXd nis = y.transpose() * Si * y;
+    std::cout << "NIS RADAR: " << nis(0, 0) << std::endl;
 }
