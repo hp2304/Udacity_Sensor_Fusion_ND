@@ -91,11 +91,9 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
         x_ << meas_package.raw_measurements_[0],
                 meas_package.raw_measurements_[1],
                 0, 0, 0;
-        P_ <<   pow(std_laspx_, 2), 0, 0, 0, 0,
-                0, pow(std_laspy_, 2), 0, 0, 0,
-                0, 0, 1, 0, 0,
-                0, 0, 0, 1, 0,
-                0, 0, 0, 0, 1;
+        P_ = MatrixXd::Identity(n_x_, n_x_);
+//        P_(0, 0) = pow(std_laspx_, 2);
+//        P_(1, 1) = pow(std_laspy_, 2);
     }
     else if(use_radar_ && meas_package.sensor_type_ == meas_package.RADAR){
         double rho = meas_package.raw_measurements_[0];
@@ -104,8 +102,8 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
                 rho * sin(phi),
                 0, 0, 0;
         P_ = MatrixXd::Identity(n_x_, n_x_);
-        P_(0, 0) = 0.4;
-        P_(1, 1) = 0.4;
+//        P_(0, 0) = 0.4;
+//        P_(1, 1) = 0.4;
     }
 
     time_us_ = meas_package.timestamp_;
@@ -196,7 +194,7 @@ void UKF::Prediction(double delta_t) {
                 delta_t * acc_noise,
                 0.5 * pow(delta_t, 2) * yaw_acc_noise,
                 delta_t * yaw_acc_noise;
-        if(abs(yaw_rate) < 0.001){
+        if(abs(yaw_rate) < 0.00001){
             v1 << vel * delta_t * cos(yaw),
                     vel * delta_t * sin(yaw),
                     0, delta_t * yaw_rate, 0;
@@ -295,7 +293,6 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
       auto py = Xsig_pred_.col(i)[1];
       auto vel = Xsig_pred_.col(i)[2];
       auto yaw = Xsig_pred_.col(i)[3];
-      auto yaw_rate = Xsig_pred_.col(i)[4];
 
       Zsig.col(i)[0] = sqrt(pow(px, 2) + pow(py, 2));
       Zsig.col(i)[1] = atan(py / px);
@@ -312,7 +309,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
       VectorXd col = Zsig.col(i) - z_pred;
       S += ((col * col.transpose()) * weights_[i]);
   }
-  MatrixXd R = MatrixXd(n_z, n_z);
+  MatrixXd R = MatrixXd::Zero(n_z, n_z);
   R.diagonal() << pow(std_radr_, 2), pow(std_radphi_, 2), pow(std_radrd_, 2);
   S += R;
 
