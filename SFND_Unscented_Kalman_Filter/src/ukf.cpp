@@ -218,9 +218,11 @@ void UKF::Prediction(double delta_t) {
      */
     // create vector for predicted state
     VectorXd x_pred = VectorXd(n_x_);
+    x_pred.setZero();
 
     // create covariance matrix for prediction
     MatrixXd P_pred = MatrixXd(n_x_, n_x_);
+    P_pred.setZero();
 
     // predict state mean
     for(int i=0; i<(2*n_aug_+1); ++i){
@@ -285,9 +287,11 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
   // mean predicted measurement
   VectorXd z_pred = VectorXd(n_z);
+  z_pred.setZero();
 
   // measurement covariance matrix S
   MatrixXd S = MatrixXd(n_z, n_z);
+  S.setZero();
 
   // transform sigma points into measurement space
   for(int i=0; i<(2 * n_aug_ + 1); ++i){
@@ -323,6 +327,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
   // create matrix for cross correlation Tc
   MatrixXd Tc = MatrixXd(n_x_, n_z);
+  Tc.setZero();
 
   // calculate cross correlation matrix
     for(int i=0; i<(2*n_aug_ + 1); ++i){
