@@ -88,7 +88,7 @@ void UKF::PredictRadarMeasurement(VectorXd* z_out, MatrixXd* S_out) {
         auto yaw_rate = Xsig_pred.col(i)[4];
 
         Zsig.col(i)[0] = sqrt(pow(px, 2) + pow(py, 2));
-        Zsig.col(i)[1] = atan(py / px);
+        Zsig.col(i)[1] = atan2(py, px);
         Zsig.col(i)[2] = (vel * (px * cos(yaw) + py * sin(yaw)))/Zsig.col(i)[0];
     }
 

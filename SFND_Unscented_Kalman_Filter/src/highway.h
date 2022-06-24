@@ -64,9 +64,15 @@ public:
 		projectedTime = std::stod(configs["PROJECTED_TIME"]);
 		projectedSteps = std::stoi(configs["PROJECTED_STEPS"]);
 
+		double std_a = std::stod(configs["ACC_NOISE_STD"]);
+        double std_yawdd = std::stod(configs["YAW_ACC_STD"]);
+
+        bool use_lidar = configs["USE_LIDAR"] == "1";
+        bool use_radar = configs["USE_RADAR"] == "1";
+
 		if( trackCars[0] )
 		{
-			UKF ukf1;
+			UKF ukf1(std_a, std_yawdd, use_lidar, use_radar);
 			car1.setUKF(ukf1);
 		}
 		traffic.push_back(car1);
@@ -80,7 +86,7 @@ public:
 		car2.setInstructions(car2_instructions);
 		if( trackCars[1] )
 		{
-			UKF ukf2;
+			UKF ukf2(std_a, std_yawdd, use_lidar, use_radar);
 			car2.setUKF(ukf2);
 		}
 		traffic.push_back(car2);
@@ -104,7 +110,7 @@ public:
 		car3.setInstructions(car3_instructions);
 		if( trackCars[2] )
 		{
-			UKF ukf3;
+			UKF ukf3(std_a, std_yawdd, use_lidar, use_radar);
 			car3.setUKF(ukf3);
 		}
 		traffic.push_back(car3);

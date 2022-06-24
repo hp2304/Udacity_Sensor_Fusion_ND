@@ -7,12 +7,12 @@ using Eigen::VectorXd;
 /**
  * Initializes Unscented Kalman filter
  */
-UKF::UKF() {
+UKF::UKF(double std_a, double std_yawdd, bool use_lidar, bool use_radar) {
   // if this is false, laser measurements will be ignored (except during init)
-  use_laser_ = true;
+  use_laser_ = use_lidar;
 
   // if this is false, radar measurements will be ignored (except during init)
-  use_radar_ = true;
+  use_radar_ = use_radar;
 
   // initial state vector
   x_ = VectorXd(5);
@@ -21,10 +21,10 @@ UKF::UKF() {
   P_ = MatrixXd(5, 5);
 
   // Process noise standard deviation longitudinal acceleration in m/s^2
-  std_a_ = 1;
+  std_a_ = std_a;
 
   // Process noise standard deviation yaw acceleration in rad/s^2
-  std_yawdd_ = 1;
+  std_yawdd_ = std_yawdd;
   
   /**
    * DO NOT MODIFY measurement noise values below.
@@ -92,8 +92,11 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
                 meas_package.raw_measurements_[1],
                 0, 0, 0;
         P_ = MatrixXd::Identity(n_x_, n_x_);
-//        P_(0, 0) = pow(std_laspx_, 2);
-//        P_(1, 1) = pow(std_laspy_, 2);
+        P_(0, 0) = pow(std_laspx_, 2);
+        P_(1, 1) = pow(std_laspy_, 2);
+
+        time_us_ = meas_package.timestamp_;
+        is_initialized_ = true;
     }
     else if(use_radar_ && meas_package.sensor_type_ == meas_package.RADAR){
         double rho = meas_package.raw_measurements_[0];
@@ -101,13 +104,16 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
         x_ <<   rho * cos(phi),
                 rho * sin(phi),
                 0, 0, 0;
-        P_ = MatrixXd::Identity(n_x_, n_x_);
-        P_(0, 0) = 0.4;
-        P_(1, 1) = 0.4;
-    }
+        P_ = MatrixXd::Zero(n_x_, n_x_);
+        P_(0, 0) = pow(std_radr_, 2);
+        P_(1, 1) = pow(std_radr_, 2);
+        P_(2, 2) = pow(std_radrd_, 2);
+        P_(3, 3) = pow(std_radphi_, 2);
+        P_(4, 4) = pow(std_radrd_, 2);
 
-    time_us_ = meas_package.timestamp_;
-    is_initialized_ = true;
+        time_us_ = meas_package.timestamp_;
+        is_initialized_ = true;
+    }
     return;
   }
 
@@ -294,7 +300,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
       auto yaw = Xsig_pred_.col(i)[3];
 
       Zsig.col(i)[0] = sqrt(pow(px, 2) + pow(py, 2));
-      Zsig.col(i)[1] = atan(py / px);
+      Zsig.col(i)[1] = std::atan2(py, px);
       Zsig.col(i)[2] = (vel * (px * cos(yaw) + py * sin(yaw)))/Zsig.col(i)[0];
   }
 

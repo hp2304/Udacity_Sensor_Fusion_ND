@@ -10,7 +10,7 @@ class UKF {
   /**
    * Constructor
    */
-  UKF();
+  UKF(double std_a = 1, double std_yawdd = 1, bool use_lidar = true, bool use_radar = true);
 
   /**
    * Destructor
