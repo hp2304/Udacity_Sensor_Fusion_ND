@@ -21,7 +21,7 @@ UKF::UKF() {
   P_ = MatrixXd(5, 5);
 
   // Process noise standard deviation longitudinal acceleration in m/s^2
-  std_a_ = 6;
+  std_a_ = 1;
 
   // Process noise standard deviation yaw acceleration in rad/s^2
   std_yawdd_ = 1;
@@ -102,8 +102,8 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
                 rho * sin(phi),
                 0, 0, 0;
         P_ = MatrixXd::Identity(n_x_, n_x_);
-//        P_(0, 0) = 0.4;
-//        P_(1, 1) = 0.4;
+        P_(0, 0) = 0.4;
+        P_(1, 1) = 0.4;
     }
 
     time_us_ = meas_package.timestamp_;
@@ -180,21 +180,20 @@ void UKF::Prediction(double delta_t) {
     // create matrix with predicted sigma points as columns
     Xsig_pred_ = MatrixXd(n_x_, 2 * n_aug_ + 1);
     for(int i=0; i<Xsig_aug.cols(); ++i){
-
         double vel = Xsig_aug.col(i)[2];
         double yaw = Xsig_aug.col(i)[3];
         double yaw_rate = Xsig_aug.col(i)[4];
 
         double acc_noise = Xsig_aug.col(i)[5];
         double yaw_acc_noise = Xsig_aug.col(i)[6];
-        VectorXd v1(5), v2(5);
+        VectorXd v1(n_x_), v2(n_x_);
 
         v2 << 0.5 * pow(delta_t, 2) * cos(yaw) * acc_noise,
                 0.5 * pow(delta_t, 2)  * sin(yaw) * acc_noise,
                 delta_t * acc_noise,
                 0.5 * pow(delta_t, 2) * yaw_acc_noise,
                 delta_t * yaw_acc_noise;
-        if(abs(yaw_rate) < 0.00001){
+        if(fabs(yaw_rate) < 0.001){
             v1 << vel * delta_t * cos(yaw),
                     vel * delta_t * sin(yaw),
                     0, delta_t * yaw_rate, 0;
