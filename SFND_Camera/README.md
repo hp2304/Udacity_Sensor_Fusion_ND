@@ -5,6 +5,7 @@
 My specifications are as follows, 
 
 * Xubuntu 18.04
+* CMake v2.23.2
 * OpenCV - v4.5.5
 * C++ v11
 * gcc v7.5.0

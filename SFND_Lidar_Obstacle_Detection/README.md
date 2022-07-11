@@ -13,6 +13,7 @@
 Versions used by me for this project are as follows:
 
 * Xubuntu 18.04
+* CMake v2.23.2
 * PCL (Point Cloud Library) - v1.8.1
 * C++ v11
 * gcc v7.5.0
