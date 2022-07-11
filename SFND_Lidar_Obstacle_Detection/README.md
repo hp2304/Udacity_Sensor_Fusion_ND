@@ -109,7 +109,7 @@ Loop over the stream of Point Cloud (PC) files. For each perform below steps,
     }
     ```
 
-4. Perform Euclidean Clustering to group points pertaining to an obstacle. This is custom implementation  utilizes the KdTree data structure.
+4. Perform Euclidean Clustering to group points pertaining to each obstacle. This custom implementation  utilizes the KdTree data structure to do the same.
 
     ```c++
     template<typename PointT>
@@ -155,7 +155,7 @@ Loop over the stream of Point Cloud (PC) files. For each perform below steps,
     }
     ```
 
-    **Note**, the method taught in class to insert the points in KdTree is simple, which hurts the search query performance since the built tree won't be necessarily balanced. 
+    **Note**, the method taught in class to insert the points in KdTree is simple, which hurts the search query performance since the built tree isn't necessarily balanced. 
     
     I have implemented another method which builds the tree such that its hight is **log(N)** in **O(N*log(N))** time, where N is the number Lidar points. Such would speed up the search queries significantly. 
     
