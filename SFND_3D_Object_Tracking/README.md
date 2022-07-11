@@ -1,4 +1,4 @@
-# 3D Object Tracking by Fusing Lidar & Camera
+# 3D Object Tracking by Fusing Knowledge Gained from Lidar & Camera 
 
 ## Introduction
 

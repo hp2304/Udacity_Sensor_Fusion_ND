@@ -1,10 +1,10 @@
-# Unscented Kalman Filter Project
+# Unscented Kalman Filter To Track Objects
 
 ![](./media/results.gif)
 
 ## Introduction
 
-In this project, the Unscented Kalman Filter (UKF) is implemented to estimate the state of multiple cars on a highway using noisy lidar and radar measurements.
+In this project, the Unscented Kalman Filter (UKF) is implemented to estimate the state of multiple cars on a highway using **noisy Lidar and Radar measurements**.
 
 **Note**, I have added my own basic config parser to avoid re-making when configs change (same as the one used in Lidar Project). This [config file](./src/configs.txt) contains the hyperparameter settings.
 
