@@ -1,6 +1,27 @@
-# SFND Radar Target Detection
+# Radar Target Detection
 
-## CFAR Calculation
+## Introduction
+
+Calculate the distance and velocity of the obstacle given the transmitted and received signal (Both simulated).
+
+## Requirements
+
+- Matlab
+
+## Usage
+
+Run [main.m](./main.m) in Matlab.
+
+## Project Objectives
+
+### Task 1
+Initialize relevant variables.
+
+### Task 2
+Define transmitted and received signal along with other relevant parameters. 
+
+### Task 3
+Perform CFAR calculation
 
 ```matlab
 nb_rows = size(RDM, 1);
@@ -49,44 +70,44 @@ end
 
 - RDM's dB calculation is converted to linear power unit to avoid extraneous ```db2pow``` calls.
 
-- A nested loop structure,
+- The nested loop structure,
 
-```matlab
-for i=(Tr + Gr + 1):(nb_rows - (Tr + Gr))
-    for j=(Td + Gd + 1):(nb_cols - (Td + Gd))
-```
+    ```matlab
+    for i=(Tr + Gr + 1):(nb_rows - (Tr + Gr))
+        for j=(Td + Gd + 1):(nb_cols - (Td + Gd))
+    ```
 
-start and end for both row and column are defined as above because CFAR calculation is only valid within these bounds. Any location outside these limits would be invalid since imposing the window on CUT would fall outside the RDM matrix.
+    start and end for both row and column are defined as above because CFAR calculation is only valid within these bounds. Any location outside these limits would be invalid since imposing the window on CUT would fall outside the RDM matrix.
 
 - A 2D window centered at CUT is selected using indexing on RDM (*linear*) matrix. Also, a 2D guard window is selected similarly.
 
-```
-row_start = i - (Tr + Gr);
-row_end = i + (Tr + Gr);
-col_start = j - (Td + Gd);
-col_end = j + (Td + Gd);
-window = RDM_linear(row_start:row_end, col_start:col_end);
+    ```
+    row_start = i - (Tr + Gr);
+    row_end = i + (Tr + Gr);
+    col_start = j - (Td + Gd);
+    col_end = j + (Td + Gd);
+    window = RDM_linear(row_start:row_end, col_start:col_end);
 
-guard_window = RDM_linear(i - Gr: i + Gr, j - Gd: j + Gd);
-```
+    guard_window = RDM_linear(i - Gr: i + Gr, j - Gd: j + Gd);
+    ```
 
 - Sum of all elements of guard window is subtracted from the sum of all elements of whole window. Such gives the sum of training cell entries. Then, it's divided by total number training cells in the window (stored previously) to get average. Calculated value is the dynamic threshold.
 
-```
-th = (sum(window, 'all') - sum(guard_window, 'all')) / nb_window_training_cells;
-```
+    ```
+    th = (sum(window, 'all') - sum(guard_window, 'all')) / nb_window_training_cells;
+    ```
 
 - Aforementioned is then converted to dB and an offset value is added to it.
 
-```
-th_dB = pow2db(th);
-th_dB = th_dB + offset_dB;
-```
+    ```
+    th_dB = pow2db(th);
+    th_dB = th_dB + offset_dB;
+    ```
 
 - CFAR value is set to 1 if RDM value (in dB) is above the previously calculated threshold.
 
-```
-if RDM(i ,j) > th_dB
-    CFAR(i, j) = 1;
-end
-```
+    ```
+    if RDM(i ,j) > th_dB
+        CFAR(i, j) = 1;
+    end
+    ```
