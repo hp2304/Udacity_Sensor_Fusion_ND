@@ -89,7 +89,7 @@ make
     3. Number of matches at the end.
 
 
-## Top-3 Recommendations (detector/descriptor)
+## Top-3 Detector-Descriptor Recommendations
 
 1. ORB-BRIEF
 2. ORB-ORB
