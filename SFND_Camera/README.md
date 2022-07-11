@@ -33,3 +33,15 @@ My specifications are as follows,
 9. [Project Lidar Points to Camera](./Lesson%206%20-%20Combining%20Camera%20and%20Lidar/Lidar-to-Camera%20Point%20Projection/lidar_to_camera/): Use Extrinsic and Intrinsic parameters to project Lidar points on the camera frame.
 
 10. [Cluster Lidar Points](./Lesson%206%20-%20Combining%20Camera%20and%20Lidar/Creating%203D-Objects/cluster_with_roi/): Group Lidar points given the Object Detection output (bounding boxes) on camera image.
+
+## Usage
+
+Go to respective directory attached with above links,
+
+```bash
+mkdir build && cd build
+cmake ..
+make
+```
+
+Running above commands will generate the executable.
