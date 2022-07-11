@@ -59,7 +59,7 @@ Group Lidar points given the Object Detection output (bounding boxes) on camera 
 
 ## Usage
 
-Go to respective directory attached with above links,
+Go to respective directory attached with above links after cloning this repo,
 
 ```bash
 mkdir build && cd build

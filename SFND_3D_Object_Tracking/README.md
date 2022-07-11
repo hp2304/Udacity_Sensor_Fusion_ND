@@ -36,7 +36,9 @@ These configs aren't changed unless stated otherwise.
 
 ## Build Instructions 
 
+After cloning this repo, run below commands,
 ```bash
+cd SFND_3D_Object_Tracking
 mkdir build && cd build
 cmake ..
 make

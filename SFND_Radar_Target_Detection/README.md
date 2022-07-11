@@ -10,7 +10,7 @@ Calculate the distance and velocity of the obstacle given the transmitted and re
 
 ## Usage
 
-Run [main.m](./main.m) in Matlab.
+After cloning this repo, go to `SFND_Radar_Target_Detection` directory and run [main.m](./main.m) in Matlab.
 
 ## Project Objectives
 

@@ -32,18 +32,18 @@ Update state mean and covariance matrix given the output of previous step.
 
 ### 5. [UKF_5](./UKF_5/)
 
-Given the predicted sigma points, transform each into the measurement space (**Radar**). Take mean of them. Update the measurment covariance matrix given the radar's measurement noise parameters. 
+Given the predicted sigma points, transform each into the measurement space (**Radar**). Calculate the mean predicted measurement and the innovation covariance matrix given the Radar's measurement noise parameters. 
 
 ### 6. [UKF_6](./UKF_6/)
 
-Update the state mean and covariance matrix using the calculated parameters from the previous step.
+Update the state mean and covariance matrix according to UKF equations using the calculated parameters from the previous step.
 
 
 
 
 ## Usage
 
-Go to respective directory attached with above links,
+Go to respective directory attached with above links after cloning this repo,
 
 ```bash
 mkdir build && cd build
