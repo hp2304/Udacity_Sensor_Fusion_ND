@@ -4,7 +4,7 @@
 
 ## Introduction
 
-In this project, the Unscented Kalman Filter (UKF) is implemented to estimate the state of multiple cars on a highway using **noisy Lidar and Radar measurements**.
+In this project, the Unscented Kalman Filter (UKF) is implemented to robustly estimate and predict the state of multiple cars on a simulated highway environment using **noisy Lidar and Radar measurements**.
 
 **Note**, I have added my own basic config parser to avoid re-making when configs change (same as the one used in Lidar Project). This [config file](./src/configs.txt) contains the hyperparameter settings.
 
@@ -357,4 +357,4 @@ Approximately 9% of the values are greater than 7.8 (3 DOF and 5% value, Chi-squ
 
 ![](./media/results.gif)
 
-**As seen above, RMSEs for shown parameters is not exceeding the tolerance threshold. Otherwise it would have shown the text in Red color.**
+**As seen above, RMSEs for shown parameters is not exceeding the tolerance threshold. Otherwise, it would have shown the text in Red color.**
