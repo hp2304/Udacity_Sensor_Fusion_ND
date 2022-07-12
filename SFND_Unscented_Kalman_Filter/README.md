@@ -353,8 +353,8 @@ Tune relevant hyperparameters to pass the RMSE tolerance criteria.
 
 Normalized Innovation Squared (NIS) is calculated for both [Radar](radar_nis.txt) and [Lidar](lidar_nis.txt). NIS values indicate whether the KF is working effectively or not. 
 
-Approximately 9% of the values are greater than 7.8 (3 DOF and 5% value, Chi-squared Distribution) for Radar. Approximately 6% of the values are greater than 5.99 (2 DOF and 5% value, Chi-squared Distribution) for Lidar. These statistics suggest that the UKF is working properly (**neither overfitting nor underfitting**). 
+Approximately 9% of the values are greater than 7.8 (3 DOF and 5% value, Chi-squared Distribution) for Radar. Approximately 6% of the values are greater than 5.99 (2 DOF and 5% value, Chi-squared Distribution) for Lidar. These statistics suggest that the UKF passes the consistency check (neither underestimating nor overestimating). 
 
 ![](./media/results.gif)
 
-**As seen above, RMSEs for shown parameters is not exceeding the tolerance threshold.**
+**As seen above, RMSEs for shown parameters is not exceeding the tolerance threshold. Otherwise it would have shown the text in Red color.**
