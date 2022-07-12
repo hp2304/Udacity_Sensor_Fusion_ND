@@ -1,4 +1,4 @@
-# Unscented Kalman Filter To Track Objects
+# Unscented Kalman Filter for Obstacle State Estimation
 
 ![](./media/results.gif)
 
